@@ -1,0 +1,47 @@
+================================================================================
+SIEMENS-ALSTOM ENGINEERING & SALES PROPOSALS
+TECHNICAL COMPLIANCE & SPECIFICATION CLAUSE LIBRARY
+================================================================================
+CLAUSE REFERENCE: TENDER-SPECS-GRID-2026-V2
+APPLICATIONS: SUBSTATION LAYOUTS, DUAL-TRANSFORMER SWITCHYARDS
+================================================================================
+
+1.0 TENDER GENERAL TECHNICAL REQUIREMENTS & SYSTEM SCOPE
+--------------------------------------------------------------------------------
+This document establishes the standard technical design criteria and compliance clauses
+for substation sales bids, commercial proposals, and tender specifications.
+
+Clause 1.1: General Scope of Works
+The contractor shall perform the design, detailed engineering, manufacturing, testing
+at factory, safe transport, installation of civil foundation pads, on-site erection,
+commissioning, and integration for regional grid expansion projects.
+- Standard Substation Capacity: 45MVA.
+- Configuration: Wye-Delta step-down transformers (33kV to 11kV primary distribution).
+- Frequency: 50Hz / 60Hz nominal operations.
+
+Clause 1.2: Civil Engineering & Site Work Guidelines
+All civil designs must conform to substation safety codes:
+- Transformer Foundation Pads: Reinforced concrete pads, class C30 mix, designed to withstand dry weight of 65 metric tons per transformer.
+- Oil Soak Pits: A concrete catchment bunding wall must surround the transformer base, capable of containing 110% of the insulation mineral oil volume. In the event of catastrophic rupture, drainage channels must direct oil to a centralized separator soak pit.
+- Separation Firewalls: A reinforced firewall must separate adjacent transformers. The firewall must possess a minimum 4-hour fire rating, measuring at least 4 meters in height and 300mm in thickness.
+
+2.0 SWITCHGEAR ARCHITECTURE & CIRCUIT CONTROLS
+--------------------------------------------------------------------------------
+Electrical isolation, busbar layouts, and primary protection controls.
+
+Clause 2.1: Gas-Insulated Switchgear (GIS) Specifications
+Primary switchrooms must utilize Gas-Insulated Switchgear (GIS) units to minimize
+physical footprint and maximize environment-independent reliability.
+- Insulation Gas: Sulfur Hexafluoride (SF6) gas.
+- SF6 Pressure Alert Limits: Nominal 0.55 MPa; Warning alarm low at 0.45 MPa; Critical low trip threshold at 0.42 MPa.
+- Short-Circuit Withstand Capability: Rated for 31.5kA short-circuit withstand for 3.0 seconds.
+- Busbar Rating: Copper busbars rated at 2000A continuous, gold-plated contacts.
+
+Clause 2.2: Redundancy & Communication Interfaces
+- Relay Protection: Dual-redundant numerical relays configured with standard IEEE 50/51 overcurrent curves, and IEEE 87T differential transformer protection.
+- Communications Interface: All nodes must interface with SCADA systems using dual-redundant fiber optic rings running the IEC 61850 protocol.
+- Interlocking Circuits: Mechanical key interlocks must be installed to prevent isolator disconnects under live loads.
+
+================================================================================
+SIEMENS-ALSTOM GLOBAL BIDDING & ESTIMATION DIVISION
+================================================================================

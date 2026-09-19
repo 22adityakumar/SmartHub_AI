@@ -1,0 +1,69 @@
+================================================================================
+SIEMENS-ALSTOM GLOBAL SALES & CUSTOMER RELATIONS
+SERVICE CONTRACTS, WARRANTY POLICIES, AND PARTS CATALOG FAQS
+================================================================================
+DOCUMENT REFERENCE: SUPPORT-FAQ-2026-V3
+TARGET READERS: INBOUND AGENTS, DISTRIBUTORS, FIELD HELP DESK
+================================================================================
+
+1.0 WARRANTY CLAUSES & EXTENDED SERVICE AGREEMENTS
+--------------------------------------------------------------------------------
+This section governs the commercial warranty rules for all Siemens-Alstom industrial
+power distribution cabinets, switchgears, transformers, and electronic controllers.
+
+Q1.1: What is the standard manufacturer warranty period for heavy equipment?
+A: All primary equipment, including Gas-Insulated Switchgears (GIS), vacuum breakers, 
+and power distribution panels (e.g., heavy-duty MCC Panels), is covered by a standard 
+36-month (3 years) manufacturer warranty. This warranty period commences either 
+from the date of dispatch from our manufacturing facilities or 24 months from the 
+installation sign-off, whichever occurs first.
+
+Q1.2: What is the warranty period for programmable logic controllers and modems?
+A: Compact electronic control modules, PLC chips, communications cards, and Modbus
+gateways are covered by a standard 24-month (2 years) warranty period starting
+from the date of installation.
+
+Q1.3: Can customers purchase warranty extensions?
+A: Yes. Extended warranty packages are available for purchase during the original
+warranty window.
+- Extended Warranty Plus: Extends total coverage to 60 months (5 years) and includes
+  annual calibration and oil degradation tests for transformers.
+- Ultimate Protection: Covers up to 120 months (10 years) for primary substation
+  equipment and includes guaranteed 24-hour on-site technician response.
+
+2.0 SHIPPING, CLAIMS & SPARE PARTS PROCESSES
+--------------------------------------------------------------------------------
+We maintain dedicated spare parts centers in Houston, Munich, Singapore, and Mumbai.
+
+Q2.1: How do I request emergency replacement parts?
+A: To initiate an emergency replacement, send an email to logistics@siemens-alstom.com.
+You must attach the following:
+- original Purchase Order (PO) number
+- Equipment Serial Number (e.g., SN-MCCB-99420)
+- SCADA telemetry fault logs (specifically current, voltage, and thermal curves)
+- High-resolution photographs showing the burnt or carbonized terminal components.
+
+Q2.2: What is the return and refund policy for auxiliary accessories?
+A: Standard catalog items (mounting brackets, DIN rail components, Modbus adaptors,
+PN-200 communications cards) can be returned for a full refund within 30 days of
+delivery. The items must be shipped back in their original, unopened packaging.
+Custom-designed busbars, copper splices, and painted enclosure sheets are non-refundable.
+
+3.0 FIELD SUPPORT & commission SERVICE CHANNELS
+--------------------------------------------------------------------------------
+We operate a tier-based global technical dispatch system for field assistance.
+
+Q3.1: How quickly can a field technician be dispatched to a site?
+A: Service dispatch speeds depend on the customer's service level agreement (SLA):
+- Tier 1 (Critical Infrastructure): Under "Ultimate Protection" contract, on-site arrival is guaranteed within 12 hours for domestic locations and 24 hours globally.
+- Tier 2 (Standard Contract): Arrival within 24 hours domestic; 48 hours international.
+- Tier 3 (Non-Contract): Field engineer dispatch is subject to availability, with typical lead times of 3 to 5 business days.
+
+Q3.2: How do customers mount the controller mounting bracket?
+A: Mount the steel controller bracket to a flat metal backplate using 4 M6 hex screws. 
+Ensure the mounting surface is grounded. A minimum clearance of 50mm around all 
+ventilation slots is strictly required to prevent thermal throttling.
+
+================================================================================
+SIEMENS-ALSTOM SUPPORT SERVICES DATABASE // UPDATED JULY 2026
+================================================================================

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHub AI- smart Factory monitoring and private AI document system - Industrial RAG & Telemetry</title>
+    <link rel="stylesheet" href="style.css?v=2.0">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked Markdown Parser CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i data-lucide="layers"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>SmartHub AI- smart Factory monitoring and private AI document system <span class="badge">v1.0</span></h2>
+                    <span class="sub-brand">Local Engineering RAG Platform</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item" data-tab="telemetry">
+                    <i data-lucide="activity"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Live Factory</span>
+                        <span class="nav-desc">MQTT Telemetry & IoT</span>
+                    </div>
+                </button>
+                <button class="nav-item active" data-tab="engineering">
+                    <i data-lucide="book-open"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Engineering Knowledge</span>
+                        <span class="nav-desc">Blueprints & manual RAG</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="maintenance">
+                    <i data-lucide="wrench"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Maintenance Diagnostics</span>
+                        <span class="nav-desc">Troubleshooting & cases RAG</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="support">
+                    <i data-lucide="help-circle"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Customer Support Bot</span>
+                        <span class="nav-desc">Client portal simulator</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="search">
+                    <i data-lucide="search"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Enterprise Search</span>
+                        <span class="nav-desc">Unified cross-channel search</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="proposal">
+                    <i data-lucide="share-2"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Proposal Draft Generator</span>
+                        <span class="nav-desc">Sales bid template creator</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="documents">
+                    <i data-lucide="hard-drive"></i>
+                    <div class="nav-details">
+                        <span class="nav-title">Document Database</span>
+                        <span class="nav-desc">Manage vectorized files</span>
+                    </div>
+                </button>
+            </nav>
+
+            <!-- SQL SQLite DB Stats Panel -->
+            <div class="sidebar-footer">
+                <div class="stats-panel glass-panel">
+                    <span class="stats-title">
+                        <i data-lucide="database"></i>
+                        SQL-SQLite DB Stats
+                    </span>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-docs">0</span>
+                            <span class="stat-lbl">Files</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-chats">0</span>
+                            <span class="stat-lbl">Chats</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-proposals">0</span>
+                            <span class="stat-lbl">Bids</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Surface -->
+        <div class="main-content">
+            <!-- Header bar -->
+            <header class="header">
+                <div>
+                    <span class="header-pretitle">Active Workspace</span>
+                    <h2 class="header-title" id="active-tab-title">Engineering Knowledge</h2>
+                </div>
+
+                <div class="header-actions">
+                    <div class="model-selector">
+                        <i data-lucide="cpu"></i>
+                        <select id="model-select" class="dropdown">
+                            <option>Loading models...</option>
+                        </select>
+                    </div>
+
+                    <div class="status-indicator">
+                        <i data-lucide="server"></i>
+                        <span class="status-dot offline" id="status-dot"></span>
+                        <span class="status-text" id="status-text">Checking Ollama...</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Work Surface panels -->
+            <main class="content-body">
+                
+                <!-- Live Factory Telemetry Tab -->
+                <section id="tab-telemetry" class="tab-section">
+                    <div class="telemetry-dashboard space-y-6">
+                        <!-- Top Bar: Asset Selection, Status, and Global Machine Health -->
+                        <div class="telemetry-topbar glass-panel p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="brand-icon">
+                                    <i data-lucide="activity"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-base text-primary">Live Factory Telemetry & DevOps</h3>
+                                        <span class="status-badge-pulse" id="telemetry-running-badge">
+                                            <span class="pulse-dot green"></span>
+                                            MONITORING LIVE
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-muted">Real-time vibration, thermal dissipation, frequency spectra, and edge diagnostics</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <div class="asset-selector-wrap">
+                                    <label class="text-xxs uppercase tracking-wider text-muted font-bold block mb-1">Target Asset</label>
+                                    <select id="telemetry-machine-select" class="dropdown text-xs">
+                                        <option value="transformer" selected>Transformer X (25MVA Substation)</option>
+                                        <option value="mcc_panel">MCC Panel A (Motor Control)</option>
+                                        <option value="spindle">CNC Milling Spindle #3</option>
+                                        <option value="hydraulic">Hydraulic Press Unit #2</option>
+                                    </select>
+                                </div>
+                                <div class="health-score-card">
+                                    <span class="text-xxs uppercase text-muted font-bold">Factory OEE</span>
+                                    <div class="health-score-val" id="factory-oee-val">99.4%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI Metrics Ribbon: 5 Real-Time KPI Cards -->
+                        <div class="telemetry-kpi-grid">
+                            <!-- Card 1: Vibration (IPS) -->
+                            <div class="telemetry-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">
+                                        <i data-lucide="waves" class="icon-blue"></i>
+                                        Vibration Velocity
+                                    </span>
+                                    <span class="kpi-tag tag-normal" id="kpi-vib-status">ISO Class I: Normal</span>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="kpi-value-wrap">
+                                        <span class="kpi-number" id="kpi-vib-val">0.148</span>
+                                        <span class="kpi-unit">IPS</span>
+                                    </div>
+                                    <div class="kpi-subtext">
+                                        <span>Peak Hold: <strong id="kpi-vib-peak">0.182</strong> IPS</span>
+                                        <span class="text-muted">Threshold: 0.28 IPS</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-progress-bg">
+                                    <div class="kpi-progress-bar bg-blue" id="kpi-vib-bar" style="width: 32%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Core Temperature -->
+                            <div class="telemetry-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">
+                                        <i data-lucide="thermometer" class="icon-rose"></i>
+                                        Winding / Oil Temp
+                                    </span>
+                                    <span class="kpi-tag tag-normal" id="kpi-temp-status">Thermal Normal</span>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="kpi-value-wrap">
+                                        <span class="kpi-number" id="kpi-temp-val">64.5</span>
+                                        <span class="kpi-unit">°C</span>
+                                    </div>
+                                    <div class="kpi-subtext">
+                                        <span>Headroom: <strong id="kpi-temp-headroom">+50.5 °C</strong></span>
+                                        <span class="text-muted">Trip: 115 °C</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-progress-bg">
+                                    <div class="kpi-progress-bar bg-amber" id="kpi-temp-bar" style="width: 56%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Rotational Speed / Frequency -->
+                            <div class="telemetry-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">
+                                        <i data-lucide="rotate-cw" class="icon-purple"></i>
+                                        Shaft Speed / Freq
+                                    </span>
+                                    <span class="kpi-tag tag-cyan" id="kpi-speed-status">50.02 Hz Grid</span>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="kpi-value-wrap">
+                                        <span class="kpi-number" id="kpi-speed-val">1,488</span>
+                                        <span class="kpi-unit">RPM</span>
+                                    </div>
+                                    <div class="kpi-subtext">
+                                        <span>THD Harmonic: <strong id="kpi-thd-val">1.4%</strong></span>
+                                        <span class="text-muted">Sync: 1,500 RPM</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-progress-bg">
+                                    <div class="kpi-progress-bar bg-purple" id="kpi-speed-bar" style="width: 98%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: Power Draw & Efficiency -->
+                            <div class="telemetry-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">
+                                        <i data-lucide="zap" class="icon-amber"></i>
+                                        Active Power Load
+                                    </span>
+                                    <span class="kpi-tag tag-emerald">Eff. 98.6%</span>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="kpi-value-wrap">
+                                        <span class="kpi-number" id="kpi-power-val">18.6</span>
+                                        <span class="kpi-unit">kW</span>
+                                    </div>
+                                    <div class="kpi-subtext">
+                                        <span>Current: <strong id="kpi-current-val">28.4 A</strong></span>
+                                        <span class="text-muted">PF: 0.97</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-progress-bg">
+                                    <div class="kpi-progress-bar bg-emerald" id="kpi-power-bar" style="width: 74%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card 5: MQTT Edge Stream Health -->
+                            <div class="telemetry-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">
+                                        <i data-lucide="radio" class="icon-cyan"></i>
+                                        MQTT IoT Pipeline
+                                    </span>
+                                    <span class="kpi-tag tag-blue">QoS 1 Ack</span>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="kpi-value-wrap">
+                                        <span class="kpi-number" id="kpi-rate-val">10</span>
+                                        <span class="kpi-unit">pkts/s</span>
+                                    </div>
+                                    <div class="kpi-subtext">
+                                        <span>Edge Latency: <strong id="kpi-latency-val">12 ms</strong></span>
+                                        <span class="text-muted">Loss: 0.0%</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-progress-bg">
+                                    <div class="kpi-progress-bar bg-cyan" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Telemetry Charts Grid -->
+                        <div class="telemetry-charts-grid">
+                            <!-- Main Waveform Dual-Axis Chart -->
+                            <div class="chart-card glass-panel">
+                                <div class="chart-card-header flex items-center justify-between">
+                                    <div>
+                                        <h4 class="chart-title flex items-center gap-2">
+                                            <i data-lucide="trending-up" class="icon-blue"></i>
+                                            Machine Dynamic Telemetry Waveform
+                                        </h4>
+                                        <p class="chart-subtitle">Dual-axis continuous stream: Vibration Velocity (IPS) vs Winding Temperature (°C)</p>
+                                    </div>
+                                    <div class="chart-actions flex items-center gap-2">
+                                        <div class="time-window-btns">
+                                            <button type="button" class="window-btn" data-window="30">30s</button>
+                                            <button type="button" class="window-btn active" data-window="60">60s</button>
+                                            <button type="button" class="window-btn" data-window="180">3m</button>
+                                        </div>
+                                        <button type="button" class="chart-btn" id="btn-toggle-thresholds" title="Toggle ISO threshold lines">
+                                            <i data-lucide="sliders"></i>
+                                            <span>Thresholds</span>
+                                        </button>
+                                        <button type="button" class="chart-btn" id="btn-pause-telemetry">
+                                            <i data-lucide="pause" id="icon-pause-telemetry"></i>
+                                            <span id="text-pause-telemetry">Pause Feed</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="telemetry-chart-wrapper">
+                                    <canvas id="factoryTelemetryChart"></canvas>
+                                </div>
+                                <div class="chart-card-footer flex items-center justify-between text-xs text-muted">
+                                    <div class="flex items-center gap-4">
+                                        <span class="legend-indicator flex items-center gap-1">
+                                            <span class="legend-dot" style="background:#2563EB;"></span>
+                                            Vibration (Left Axis - IPS)
+                                        </span>
+                                        <span class="legend-indicator flex items-center gap-1">
+                                            <span class="legend-dot" style="background:#EF4444;"></span>
+                                            Temperature (Right Axis - °C)
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="badge-threshold-warn">Warning: 85°C / 0.28 IPS</span>
+                                        <span class="badge-threshold-crit">Critical: 105°C / 0.45 IPS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vibration FFT Harmonics Spectrum Chart -->
+                            <div class="chart-card glass-panel">
+                                <div class="chart-card-header flex items-center justify-between">
+                                    <div>
+                                        <h4 class="chart-title flex items-center gap-2">
+                                            <i data-lucide="bar-chart-2" class="icon-purple"></i>
+                                            Vibration FFT Spectral Harmonics (0 - 500 Hz)
+                                        </h4>
+                                        <p class="chart-subtitle">Frequency domain breakdown identifying 1X unbalance, 2X alignment & bearing wear</p>
+                                    </div>
+                                    <span class="kpi-tag tag-cyan">Hanning Window • 1600 Lines</span>
+                                </div>
+                                <div class="fft-chart-wrapper">
+                                    <canvas id="factoryFftChart"></canvas>
+                                </div>
+                                <div class="chart-card-footer flex items-center justify-between text-xs text-muted">
+                                    <div class="flex items-center gap-4">
+                                        <span class="flex items-center gap-1"><strong class="text-blue">1X (25Hz):</strong> Shaft Baseline</span>
+                                        <span class="flex items-center gap-1"><strong class="text-purple">2X (50Hz):</strong> Alignment</span>
+                                        <span class="flex items-center gap-1"><strong class="text-rose">High-Freq:</strong> Bearing Cage</span>
+                                    </div>
+                                    <span class="text-emerald font-semibold">Spectral Energy: NOMINAL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Section: Live Event Stream & AWS/MQTT Gateway Status -->
+                        <div class="telemetry-bottom-grid">
+                            <!-- Real-Time Telemetry Event Stream Log -->
+                            <div class="glass-panel p-4 flex-col overflow-hidden">
+                                <div class="flex items-center justify-between mb-3 border-b pb-2">
+                                    <h4 class="section-subtitle flex items-center gap-2">
+                                        <i data-lucide="list" class="icon-blue"></i>
+                                        Real-Time Telemetry & Alarm Stream
+                                    </h4>
+                                    <span class="text-xxs text-muted font-mono" id="stream-sample-rate">Live Buffer</span>
+                                </div>
+                                <div class="event-stream-scroll">
+                                    <table class="event-stream-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Timestamp</th>
+                                                <th>Asset</th>
+                                                <th>Sensor Tag</th>
+                                                <th>Reading</th>
+                                                <th>Status</th>
+                                                <th>Diagnosis</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="telemetry-events-body">
+                                            <!-- Dynamically appended -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Active MQTT AWS Connectors & Gateway Health -->
+                            <div class="glass-panel p-4 space-y-4">
+                                <div class="flex items-center justify-between border-b pb-2">
+                                    <h4 class="section-subtitle flex items-center gap-2">
+                                        <i data-lucide="cloud" class="icon-cyan"></i>
+                                        Edge Gateway & AWS Bridge
+                                    </h4>
+                                    <span class="status-dot online"></span>
+                                </div>
+
+                                <div class="gateway-info-box space-y-2 text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-muted">MQTT Host:</span>
+                                        <span class="font-mono text-primary font-bold">127.0.0.1:1883</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-muted">Topic Prefix:</span>
+                                        <span class="font-mono text-blue font-bold">factory/telemetry/live</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-muted">AWS Shadow:</span>
+                                        <span class="text-emerald font-bold">Active & Synchronized</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-muted">Telemetry Driver:</span>
+                                        <span class="text-primary font-medium">PyModbus / Paho-MQTT</span>
+                                    </div>
+                                </div>
+
+                                <div id="factory-health-status" class="factory-health-box border-t pt-3 space-y-2 text-xs font-mono">
+                                    <div class="flex items-center gap-2 text-emerald">
+                                        <i data-lucide="check-circle2" style="width:14px;height:14px;"></i>
+                                        <span>Backend API: ONLINE</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-blue">
+                                        <i data-lucide="database" style="width:14px;height:14px;"></i>
+                                        <span>SQLite Store: HEALTHY</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 1: Engineering Knowledge Assistant -->
+                <section id="tab-engineering" class="tab-section active">
+                    <div class="workspace-layout">
+                        <!-- Left Panel: Session Sidebar -->
+                        <div class="session-sidebar glass-panel">
+                            <button class="btn btn-primary btn-full" id="btn-new-eng-chat">
+                                <i data-lucide="plus"></i>
+                                New Discussion
+                            </button>
+                            <div class="sessions-list" id="eng-sessions-list">
+                                <!-- JS populated -->
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Chat log -->
+                        <div class="chat-container glass-panel">
+                            <div class="chat-header">
+                                <div class="chat-header-info">
+                                    <i data-lucide="book-open" class="icon-blue"></i>
+                                    <h3>Engineering Knowledge Assistant</h3>
+                                </div>
+                                <span class="status-tag">
+                                    <span class="pulse-dot green"></span>
+                                    Ready for manuals lookup
+                                </span>
+                            </div>
+
+                            <div class="chat-log" id="eng-chat-log">
+                                <!-- Chat history/bubbles go here -->
+                            </div>
+
+                            <div class="chat-input-bar">
+                                <form id="eng-chat-form" class="chat-form">
+                                    <input type="text" id="eng-chat-input" placeholder="Ask a technical question about specs or manuals..." required disabled>
+                                    <button type="submit" class="btn btn-icon" id="btn-send-eng" disabled>
+                                        <i data-lucide="send"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 2: Maintenance Diagnostics Assistant -->
+                <section id="tab-maintenance" class="tab-section">
+                    <div class="maintenance-header glass-panel">
+                        <div class="maint-title-group">
+                            <i data-lucide="wrench" class="icon-blue"></i>
+                            <h3>Maintenance Diagnostics Assistant</h3>
+                        </div>
+                        <div class="maint-tabs">
+                            <button class="maint-tab-btn active" data-maint-tab="diagnostic">Diagnostic Analyzer</button>
+                            <button class="maint-tab-btn" data-maint-tab="history">Historical DB Logs</button>
+                        </div>
+                    </div>
+
+                    <div class="maint-content-area">
+                        <!-- Diagnostic tab -->
+                        <div id="maint-tab-diagnostic" class="maint-sub-section active">
+                            <div class="grid grid-2-3">
+                                <!-- Inputs -->
+                                <div class="glass-panel p-6 space-y-4">
+                                    <h4 class="section-subtitle">
+                                        <i data-lucide="activity"></i>
+                                        Telemetry Alarm Feed
+                                    </h4>
+
+                                    <div class="presets-section">
+                                        <span class="presets-label">Quick Presets</span>
+                                        <div class="presets-list" id="maint-presets">
+                                            <!-- Hydrated by JS -->
+                                        </div>
+                                    </div>
+
+                                    <form id="maint-diag-form" class="space-y-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Equipment under test</label>
+                                            <select id="maint-equipment" class="dropdown dropdown-full">
+                                                <option value="Transformer X">Transformer X (Main Power Step-down)</option>
+                                                <option value="MCC Panel A">MCC Panel A (Motor Control Center)</option>
+                                                <option value="GIS Switchgear B">GIS Switchgear B (Gas Insulated Switchgear)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Sensor Alarm Symptoms</label>
+                                            <textarea id="maint-telemetry" rows="5" class="textarea text-sm" placeholder="Describe alarms, high heat, acoustics..."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-full">
+                                            <i data-lucide="play"></i>
+                                            Initiate Diagnosis
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Outputs -->
+                                <div class="diagnostic-output-panel" id="maint-output-panel">
+                                    <div class="glass-panel p-6 h-full flex-center text-center text-muted" id="maint-output-idle">
+                                        <div class="space-y-2">
+                                            <i data-lucide="alert-triangle" class="icon-lg text-muted"></i>
+                                            <h4>Diagnostic Dashboard Idle</h4>
+                                            <p class="text-xs">Apply a quick preset or fill symptoms on the left to analyze.</p>
+                                        </div>
+                                    </div>
+                                    <div class="glass-panel p-6 space-y-4 hidden" id="maint-output-results">
+                                        <div class="maint-report-header">
+                                            <div>
+                                                <h4>Maintenance Diagnostic Report</h4>
+                                                <span class="text-xs text-muted" id="maint-report-asset">Asset: -</span>
+                                            </div>
+                                            <div class="confidence-badge">
+                                                <span>Confidence: </span>
+                                                <div class="confidence-bar-container">
+                                                    <span class="confidence-bar green" id="maint-confidence-bar"></span>
+                                                </div>
+                                                <span class="confidence-text font-bold text-green" id="maint-confidence-text">HIGH</span>
+                                            </div>
+                                        </div>
+                                        <div class="report-body text-sm" id="maint-report-body">
+                                            <!-- Report output text -->
+                                        </div>
+                                        <div class="report-references pt-4 border-t" id="maint-report-references">
+                                            <!-- Citation lists -->
+                                        </div>
+
+                                        <!-- Stitch MCP Inspired Live Telemetry Widget -->
+                                        <div class="devops-telemetry-container pt-4 border-t relative overflow-hidden" style="margin-top: 16px;">
+                                            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none"></div>
+                                            <div class="flex justify-between items-start mb-3 relative z-10">
+                                                <div>
+                                                    <h5 class="text-xs font-bold text-white flex items-center gap-1.5" id="devops-equipment-name">
+                                                        <span class="devops-pulse-indicator"></span>
+                                                        Live Telemetry Feed
+                                                    </h5>
+                                                    <p class="font-mono text-[9px] text-muted mt-1" id="devops-sensor-name">SENSOR: VIB_X_AXIS_B</p>
+                                                </div>
+                                                <div class="flex gap-2">
+                                                    <div class="devops-readout-card">
+                                                        <span class="devops-readout-label" id="devops-param-freq-lbl">FREQUENCY</span>
+                                                        <span class="devops-readout-value text-rose" id="devops-param-freq-val">119.8 <span class="text-xxs">Hz</span></span>
+                                                    </div>
+                                                    <div class="devops-readout-card">
+                                                        <span class="devops-readout-label" id="devops-param-amp-lbl">AMPLITUDE</span>
+                                                        <span class="devops-readout-value text-cyan" id="devops-param-amp-val">0.18 <span class="text-xxs">IPS</span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="devops-chart-canvas relative z-10" style="height: 120px; width: 100%;">
+                                                <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 200">
+                                                    <defs>
+                                                        <filter height="140%" id="devops-glow-cyan" width="140%" x="-20%" y="-20%">
+                                                            <feGaussianBlur result="blur" stdDeviation="3"></feGaussianBlur>
+                                                            <feMerge>
+                                                                <feMergeNode in="blur"></feMergeNode>
+                                                                <feMergeNode in="SourceGraphic"></feMergeNode>
+                                                            </feMerge>
+                                                        </filter>
+                                                        <filter height="140%" id="devops-glow-red" width="140%" x="-20%" y="-20%">
+                                                            <feGaussianBlur result="blur" stdDeviation="4"></feGaussianBlur>
+                                                            <feComponentTransfer in="blur" result="tintedBlur">
+                                                                <feFuncR slope="2" type="linear"></feFuncR>
+                                                            </feComponentTransfer>
+                                                            <feMerge>
+                                                                <feMergeNode in="tintedBlur"></feMergeNode>
+                                                                <feMergeNode in="SourceGraphic"></feMergeNode>
+                                                            </feMerge>
+                                                        </filter>
+                                                        <linearGradient id="devops-fade" x1="0" x2="0" y1="0" y2="1">
+                                                            <stop offset="0%" stop-color="rgba(239, 68, 68, 0.15)"></stop>
+                                                            <stop offset="100%" stop-color="rgba(239, 68, 68, 0)"></stop>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <line stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+                                                    <line stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="100" y2="100"></line>
+                                                    <line stroke="rgba(255,255,255,0.05)" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+                                                    <line id="devops-threshold-line" opacity="0.8" stroke="#F59E0B" stroke-dasharray="8 4" stroke-width="1.5" x1="0" x2="1000" y1="80" y2="80"></line>
+                                                    <text id="devops-threshold-line-lbl" fill="#F59E0B" font-family="JetBrains Mono" font-size="12" opacity="0.8" x="15" y="73">WARNING LIMIT (0.15 IPS)</text>
+                                                    
+                                                    <!-- Normal Line (Cyan) -->
+                                                    <path d="M0,150 Q50,140 100,160 T200,155 T300,145 T400,165 T500,150 T600,155 T700,140 T800,160 T900,145 T1000,155" fill="none" opacity="0.3" stroke="#3B82F6" stroke-width="1.5"></path>
+                                                    
+                                                    <!-- Anomaly Line (Red/Glow) -->
+                                                    <path d="M0,120 Q30,110 60,130 T120,80 T180,140 T240,65 T300,150 T360,40 T420,160 T480,50 T540,140 T600,35 T660,150 T720,20 T780,160 T840,45 T900,150 T960,30 T1000,100" fill="none" filter="url(#devops-glow-red)" stroke="#EF4444" stroke-width="2.5"></path>
+                                                    <path d="M0,120 Q30,110 60,130 T120,80 T180,140 T240,65 T300,150 T360,40 T420,160 T480,50 T540,140 T600,35 T660,150 T720,20 T780,160 T840,45 T900,150 T960,30 T1000,100 L1000,200 L0,200 Z" fill="url(#devops-fade)"></path>
+                                                    
+                                                    <circle cx="960" cy="30" fill="#EF4444" filter="url(#devops-glow-red)" r="5"></circle>
+                                                    <line opacity="0.4" stroke="#EF4444" stroke-dasharray="2 2" stroke-width="1" x1="960" x2="960" y1="30" y2="200"></line>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logs history tab -->
+                        <div id="maint-tab-history" class="maint-sub-section">
+                            <div class="grid grid-1-2">
+                                <!-- Log a new failure -->
+                                <div class="glass-panel p-6 space-y-4">
+                                    <h4 class="section-subtitle">
+                                        <i data-lucide="history"></i>
+                                        Log Maintenance Event
+                                    </h4>
+                                    <form id="maint-log-form" class="space-y-3 text-xs">
+                                        <div class="form-group">
+                                            <label class="form-label">Equipment Name</label>
+                                            <input type="text" id="log-eq-name" class="input" placeholder="e.g. Transformer X" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Failure Mode</label>
+                                            <input type="text" id="log-fail-mode" class="input" placeholder="e.g. Overheating" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Symptoms</label>
+                                            <textarea id="log-symptoms" rows="2" class="textarea text-xs" placeholder="Describe symptoms..." required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Resolution Actions</label>
+                                            <textarea id="log-resolution" rows="3" class="textarea text-xs" placeholder="Describe resolution taken..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-full">Log to SQL DB</button>
+                                    </form>
+                                </div>
+
+                                <!-- Database records list -->
+                                <div class="glass-panel p-6 flex-col overflow-hidden">
+                                    <h4 class="section-subtitle border-b pb-3 mb-4">
+                                        <i data-lucide="database"></i>
+                                        SQLite SQL Historical Failures
+                                    </h4>
+                                    <div class="records-log-list" id="maint-records-list">
+                                        <!-- Hydrated -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 3: Customer Support Chatbot -->
+                <section id="tab-support" class="tab-section">
+                    <div class="support-wrapper glass-panel">
+                        <div class="support-header">
+                            <div class="support-header-info">
+                                <span class="status-dot purple"></span>
+                                <div>
+                                    <h3>Customer Support Chatbot Simulator</h3>
+                                    <p class="text-xxs text-muted">Sandbox mode - accesses FAQ and Product Catalogs vector channel only</p>
+                                </div>
+                            </div>
+                            <span class="badge badge-purple">External View</span>
+                        </div>
+
+                        <div class="support-log" id="support-chat-log">
+                            <!-- Support chats -->
+                        </div>
+
+                        <div class="support-input-bar">
+                            <form id="support-chat-form" class="chat-form">
+                                <input type="text" id="support-chat-input" placeholder="Type a message to customer support..." required disabled>
+                                <button type="submit" class="btn btn-purple btn-icon" id="btn-send-support" disabled>
+                                    <i data-lucide="send"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 4: Enterprise Search -->
+                <section id="tab-search" class="tab-section">
+                    <div class="search-hero text-center space-y-3">
+                        <h2 class="search-title font-bold text-white flex-center gap-2">
+                            <i data-lucide="search" class="icon-blue"></i>
+                            Enterprise Search Engine
+                        </h2>
+                        <p class="text-xs text-muted max-w-lg mx-auto">
+                            Unified search query across DevOps maintenance databases, Active SharePoint metadata, client proposal archives, and indexed manuals.
+                        </p>
+                    </div>
+
+                    <div class="search-box-container">
+                        <form id="search-form" class="search-form-bar">
+                            <input type="text" id="search-query-input" placeholder="Search manuals, switchgears, past proposals, or telemetry keywords..." required>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-lucide="search"></i>
+                                Search
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="search-results-wrapper" id="search-results-panel">
+                        <div class="results-header hidden" id="search-results-header">
+                            <span class="text-xs uppercase text-muted font-bold" id="search-results-count">Results (0)</span>
+                            <span class="text-xs text-muted font-bold uppercase">Relevance Ranking</span>
+                        </div>
+
+                        <div id="search-results-list" class="space-y-4">
+                            <!-- JS loaded cards -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 5: Proposal Generator -->
+                <section id="tab-proposal" class="tab-section">
+                    <div class="proposal-header glass-panel">
+                        <div>
+                            <h3>Proposal & Tender Draft Generator</h3>
+                            <p class="text-xs text-muted">Draft technical bids by pulling vectorized template clauses (Qdrant RAG) and historical bid projects (SQLite DB).</p>
+                        </div>
+                        <div class="proposal-tabs">
+                            <button class="prop-tab-btn active" data-prop-tab="creator">Draft Creator</button>
+                            <button class="prop-tab-btn" data-prop-tab="archive">Tender Archive</button>
+                        </div>
+                    </div>
+
+                    <div class="proposal-content-area">
+                        <!-- Creator Tab -->
+                        <div id="prop-tab-creator" class="prop-sub-section active">
+                            <div class="grid grid-2-3">
+                                <!-- Parameters -->
+                                <div class="glass-panel p-6 space-y-4">
+                                    <h4 class="section-subtitle">
+                                        <i data-lucide="sparkles"></i>
+                                        Project Parameters
+                                    </h4>
+
+                                    <div class="presets-section">
+                                        <span class="presets-label">Quick Presets</span>
+                                        <div class="presets-list" id="prop-presets">
+                                            <!-- Presets Hydrated -->
+                                        </div>
+                                    </div>
+
+                                    <form id="prop-form" class="space-y-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Customer Name</label>
+                                            <input type="text" id="prop-customer" class="input text-xs" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Project Name</label>
+                                            <input type="text" id="prop-proj-name" class="input text-xs" required>
+                                        </div>
+                                        <div class="grid grid-2 gap-3">
+                                            <div class="form-group">
+                                                <label class="form-label">Capacity/Specs</label>
+                                                <input type="text" id="prop-capacity" class="input text-xs" placeholder="e.g. 25MVA" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Location</label>
+                                                <input type="text" id="prop-location" class="input text-xs" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-full">
+                                            <i data-lucide="sparkles"></i>
+                                            Draft Tender Proposal
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Draft Board -->
+                                <div class="proposal-draftboard" id="proposal-draftboard-panel">
+                                    <div class="glass-panel p-12 rounded-2xl h-full flex-center text-center text-muted" id="prop-draft-idle">
+                                        <div class="space-y-2">
+                                            <i data-lucide="sparkles" class="icon-lg text-muted"></i>
+                                            <h4>Tender Draftboard Empty</h4>
+                                            <p class="text-xs">Fill project details and click "Draft Tender Proposal" to generate.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="glass-panel p-6 space-y-4 hidden" id="prop-draft-results">
+                                        <div class="draft-header">
+                                            <div>
+                                                <h4>Technical & Commercial Draft Proposal</h4>
+                                                <p class="text-xxs text-muted" id="prop-draft-subtitle">Client: -</p>
+                                            </div>
+                                            <span class="badge font-mono" id="prop-draft-id">ID: #0</span>
+                                        </div>
+
+                                        <div class="document-viewer">
+                                            <div class="doc-meta-sheet">
+                                                <div id="doc-meta-proj">Project: -</div>
+                                                <div id="doc-meta-loc">Location: -</div>
+                                            </div>
+                                            <div class="doc-toolbar">
+                                                <span><b>B</b></span>
+                                                <span><i>I</i></span>
+                                                <span><u>U</u></span>
+                                                <span class="divider"></span>
+                                                <span>H1</span>
+                                                <span>H2</span>
+                                                <span class="divider"></span>
+                                                <i data-lucide="clipboard" class="toolbar-icon"></i>
+                                            </div>
+                                            <textarea id="prop-editor" class="doc-textarea" rows="14"></textarea>
+                                        </div>
+
+                                        <div class="prop-references" id="prop-references-list">
+                                            <!-- Citations references -->
+                                        </div>
+
+                                        <form id="prop-review-form" class="review-signature-section">
+                                            <div class="form-group flex-1">
+                                                <label class="form-label text-xxs font-bold uppercase">Sign-off Review (Engineer Name)</label>
+                                                <input type="text" id="prop-reviewer" class="input font-bold" placeholder="Lead Engineer..." required>
+                                            </div>
+                                            <button type="submit" class="btn btn-emerald uppercase text-xs tracking-wider">
+                                                <i data-lucide="save"></i>
+                                                Sign-off Draft
+                                            </button>
+                                        </form>
+
+                                        <div class="review-status-card hidden" id="prop-review-approved-card">
+                                            <i data-lucide="check-circle2"></i>
+                                            <span id="prop-review-approved-text">Approved & Locked in SQLite database</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Archive Tab -->
+                        <div id="prop-tab-archive" class="prop-sub-section">
+                            <div class="glass-panel p-6">
+                                <h4 class="section-subtitle border-b pb-3 mb-4">
+                                    <i data-lucide="history"></i>
+                                    Past Proposal Tenders (SQLite SQL Database Archive)
+                                </h4>
+                                <div class="proposal-cards-grid" id="prop-archive-grid">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Use Case 6: Document Database Manager -->
+                <section id="tab-documents" class="tab-section">
+                    <div class="grid grid-1-2">
+                        <!-- Ingest Document Form -->
+                        <div class="glass-panel p-6 space-y-4">
+                            <h3 class="section-subtitle border-b pb-3 flex items-center gap-2 text-white">
+                                <i data-lucide="upload" class="icon-blue"></i>
+                                Ingest Document
+                            </h3>
+
+                            <form id="doc-upload-form" class="space-y-4">
+                                <div class="form-group">
+                                    <label class="form-label">RAG Target Channel</label>
+                                    <select id="doc-upload-category" class="dropdown dropdown-full">
+                                        <option value="engineering">Engineering Knowledge Base (Manuals, Specs)</option>
+                                        <option value="customer_support">Customer Support (FAQ, Catalogs)</option>
+                                        <option value="proposals">Proposal Archive (Past Bid References)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Select PDF or TXT File</label>
+                                    <div class="file-uploader-box" id="file-dropzone">
+                                        <input type="file" id="doc-file-input" accept=".pdf,.txt" class="hidden">
+                                        <div class="uploader-content">
+                                            <i data-lucide="upload-cloud" class="icon-lg text-muted"></i>
+                                            <span class="file-box-lbl" id="upload-box-label">Click to select file...</span>
+                                            <span class="text-xxs text-muted mt-1 block">Max size 50MB. Text-based files only.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-full" id="btn-doc-submit" disabled>
+                                    <i data-lucide="upload"></i>
+                                    Upload & Vectorize
+                                </button>
+                            </form>
+
+                            <div class="msg-box error-msg hidden" id="upload-error-msg"></div>
+                            <div class="msg-box success-msg hidden" id="upload-success-msg"></div>
+                        </div>
+
+                        <!-- Documents Grid/Table -->
+                        <div class="glass-panel p-6 flex-col overflow-hidden">
+                            <h3 class="section-subtitle border-b pb-3 mb-4 text-white flex items-center gap-2">
+                                <i data-lucide="database" class="icon-blue"></i>
+                                Indexed Document Files
+                            </h3>
+                            <div class="table-wrapper">
+                                <table class="table" id="docs-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Filename</th>
+                                            <th>Channel</th>
+                                            <th>Size</th>
+                                            <th>Chunks</th>
+                                            <th class="text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="docs-table-body">
+                                        <!-- Populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Citations Details modal -->
+    <div class="modal-scrim hidden" id="citation-modal">
+        <div class="modal-box glass-panel">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i data-lucide="file-text" class="icon-blue"></i>
+                    Citation Reference Chunk
+                </h4>
+                <button class="modal-close-btn" id="btn-modal-close">✕</button>
+            </div>
+            <div class="modal-body space-y-3">
+                <div class="modal-meta">
+                    <span id="modal-cite-file">Document: -</span>
+                    <span id="modal-cite-page">Page: -</span>
+                </div>
+                <div class="modal-text-content" id="modal-cite-text">
+                    <!-- Citation snippet text -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=2.0"></script>
+</body>
+</html>

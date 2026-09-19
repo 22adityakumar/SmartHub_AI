@@ -1,0 +1,5 @@
+Transformer X Technical Manual
+Section 4.3: Electrical Specifications
+The insulation class for Transformer X is Class F (155°C). Ensure winding temperature does not exceed 115°C under nominal loading conditions.
+Recommended torque for terminal bolts in MCC Panel A is 45 Nm. Under no circumstances should the torque exceed 55 Nm to prevent copper threads stripping.
+Relay protection is configured using standard IEEE 51 (Inverse Time Overcurrent) and IEEE 50 (Instantaneous Overcurrent) protection curves.

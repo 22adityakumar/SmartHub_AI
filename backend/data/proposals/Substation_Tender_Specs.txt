@@ -1,0 +1,5 @@
+Substation Proposal Reference Library
+Section 1.1: General Technical Requirements
+Scope of work includes design, engineering, supply, testing, and commissioning of a 33kV substation rated at 25MVA.
+Civil works must include transformer foundation pads, oil drainage soak pits, and fencing conforming to local grid standards.
+All switchgear must be SF6 gas-insulated type (GIS) rated at 31.5kA short circuit withstand for 3 seconds.

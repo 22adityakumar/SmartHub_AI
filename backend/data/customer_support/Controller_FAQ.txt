@@ -1,0 +1,7 @@
+Controller Support & Warranty FAQ
+Section 1: Warranty terms
+Our industrial controllers are covered by a standard 24-month (2 years) warranty period starting from the date of installation. Optional extended warranty is available up to 48 months.
+Section 2: Installation and Mounting
+To install the controller, mount the bracket to a flat metal backplate using 4 M6 hex screws. Ensure at least 50mm of clearance around all ventilation slots to prevent throttling.
+Section 3: Accessories Compatibility
+The controller is compatible with standard Modbus TCP gateway modules (Part No. MB-100) and Profinet adapter cards (Part No. PN-200).

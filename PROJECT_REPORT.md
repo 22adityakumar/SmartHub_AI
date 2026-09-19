@@ -312,4 +312,3 @@ http://localhost:8000/docs
 
 ---
 
-*Report prepared autonomously by Antigravity AI Engineering Assistant.*
